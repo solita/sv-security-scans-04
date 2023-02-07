@@ -1,0 +1,8 @@
+requests
+cryptography
+
+# Has vulnerabilities, fixed in 2.2.0:
+aws-encryption-sdk==2.0.0
+
+# No vulnerabilities, 2023-02-03:
+# aws-encryption-sdk==2.3.0
