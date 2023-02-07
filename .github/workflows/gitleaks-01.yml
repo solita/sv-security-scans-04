@@ -1,0 +1,40 @@
+# 2023-02-04
+
+# TODO: https://hub.docker.com/r/zricethezav/gitleaks
+# TODO: You may try to use Action https://github.com/marketplace/actions/gitleaks, but it requres a license!
+
+name: gitleaks-01
+on:
+  push:
+    branches:
+      - main
+      # - nonexistent  # avoid triggering on main
+jobs:
+  scan:
+    name: GitLeaks-Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # fetch all history for all branches and tags
+      - name: GitLeaks Scan
+        run: |
+          set -ux
+          DOCKER_IMAGE="zricethezav/gitleaks:latest"
+          time docker pull ${DOCKER_IMAGE}
+          docker images
+          # logFile=$(Build.BuildNumber).scan.txt
+          # logFile=scan.txt
+          ls -al
+          docker run ${DOCKER_IMAGE} --help
+          # TODO: --exit-code 0, not to faiul immediately, continue with subsequent commands!
+          time docker run -v $(pwd):/my-repo ${DOCKER_IMAGE} detect --source="/my-repo" --verbose --exit-code 0 >> scan.txt 2>&1
+          ls -al
+          cat scan.txt
+      # https://github.com/actions/upload-artifact
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: scan.txt
