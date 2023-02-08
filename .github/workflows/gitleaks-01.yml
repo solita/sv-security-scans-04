@@ -33,7 +33,7 @@ jobs:
           ls -al
           docker run ${DOCKER_IMAGE} --help
           # TODO: --exit-code 0, not to faiul immediately, continue with subsequent commands!
-          time docker run -v $(pwd):/my-repo ${DOCKER_IMAGE} detect --source="/my-repo" --verbose --exit-code 0 --report-format sarif >> gitleaks.sarif 2>&1
+          time docker run -v $(pwd):/my-repo ${DOCKER_IMAGE} detect --source="/my-repo" --verbose --exit-code 0 --report-format sarif --report-path gitleaks.sarif
           ls -al
           cat gitleaks.sarif
           ls -al ../
