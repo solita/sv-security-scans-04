@@ -17,24 +17,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # fetch all history for all branches and tags
+          # fetch-depth: 0  # fetch all history for all branches and tags
+          fetch-depth: 1  # only the last commit
+            # Initializes the CodeQL tools for scanning.
+      # - name: Initialize CodeQL
+      #   uses: github/codeql-action/init@v2
       - name: GitLeaks Scan
         run: |
           set -ux
           DOCKER_IMAGE="zricethezav/gitleaks:latest"
           time docker pull ${DOCKER_IMAGE}
           docker images
-          # logFile=$(Build.BuildNumber).scan.txt
-          # logFile=scan.txt
+          # logFile=$(Build.BuildNumber).gitleaks.txt
+          # logFile=gitleaks.txt
           ls -al
           docker run ${DOCKER_IMAGE} --help
           # TODO: --exit-code 0, not to faiul immediately, continue with subsequent commands!
-          time docker run -v $(pwd):/my-repo ${DOCKER_IMAGE} detect --source="/my-repo" --verbose --exit-code 0 >> scan.txt 2>&1
+          time docker run -v $(pwd):/my-repo ${DOCKER_IMAGE} detect --source="/my-repo" --verbose --exit-code 0 --report-format sarif >> gitleaks.sarif 2>&1
           ls -al
-          cat scan.txt
+          cat gitleaks.sarif
+          ls -al ../
+          ls -al ../../
+
       # https://github.com/actions/upload-artifact
-      - name: Upload results
-        uses: actions/upload-artifact@v3
+      # - name: Upload results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: my-artifact
+      #     path: gitleaks.txt
+
+      # TODO: Advanced Security must be enabled for this repository to use code scanning
+      - uses: github/codeql-action/upload-sarif@v2
         with:
-          name: my-artifact
-          path: scan.txt
+          sarif_file: gitleaks.sarif
