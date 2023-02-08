@@ -32,7 +32,9 @@ jobs:
           # logFile=gitleaks.txt
           ls -al
           docker run ${DOCKER_IMAGE} --help
-          # TODO: --exit-code 0, not to faiul immediately, continue with subsequent commands!
+          touch gitleaks.sarif && chmod 666 gitleaks.sarif
+          ls -al
+          # TODO: --exit-code 0, not to fail immediately, continue with subsequent commands!
           time docker run -v $(pwd):/my-repo ${DOCKER_IMAGE} detect --source="/my-repo" --verbose --exit-code 0 --report-format sarif --report-path /my-repo/gitleaks.sarif
           sleep 3
           ls -al
