@@ -57,3 +57,4 @@ jobs:
         with:
           sarif_file: gitleaks.sarif
           category: my-gitleaks-scan
+          wait-for-processing: "true"
