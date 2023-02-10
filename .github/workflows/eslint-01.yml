@@ -7,8 +7,8 @@ name: "ESLint analysis"
 on:
   push:
     branches:
-      - main
-      # - nonexistent  # avoid triggering on main
+      # - main
+      - nonexistent  # avoid triggering on main
   # schedule:
   #   - cron: '45 15 * * 3'
 
