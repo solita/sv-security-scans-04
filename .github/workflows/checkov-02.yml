@@ -1,0 +1,37 @@
+# 2023-02-11
+
+# https://github.com/bridgecrewio/checkov-action
+
+name: checkov-02
+# on: [push]
+on:
+  push:
+    branches:
+      - main
+      # - nonexistent  # avoid triggering on main
+jobs:
+  Checkov-Terraform-Scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Test Scan with Checkov
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform-in-action/chapter1
+          framework: terraform  # {cloudformation,terraform,kubernetes,all}
+          output_format: sarif  # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
+          output_file_path: checkov-results.sarif # folder and name of results file
+          # docker_image: ${{ env.IMAGE_NAME }} # define the name of the image to scan
+          # dockerfile_path: ${{ format('{0}/Dockerfile', env.IMAGE_PATH) }} # path to the Dockerfile
+          # container_user: 1000 # optional: Define what UID and / or what GID to run the container under to prevent permission issues
+      - name: Upload Checkov scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'checkov-results.sarif'
+          # category: my-checkov-scan
+          wait-for-processing: "true"

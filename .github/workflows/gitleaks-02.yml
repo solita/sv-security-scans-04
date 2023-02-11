@@ -1,14 +1,14 @@
 # 2023-02-04
 
 # TODO: https://hub.docker.com/r/zricethezav/gitleaks
-# TODO: You may try to use Action https://github.com/marketplace/actions/gitleaks, but it requres a license!
+# TODO: You may try to use Action https://github.com/marketplace/actions/gitleaks, but it requires a license!
 
-name: gitleaks-01
+name: gitleaks-02
 on:
   push:
     branches:
-      # - main
-      - nonexistent  # avoid triggering on main
+      - main
+      # - nonexistent  # avoid triggering on main
 jobs:
   scan:
     name: GitLeaks-Scan
